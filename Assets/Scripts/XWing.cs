@@ -49,7 +49,6 @@ public class XWing : NetworkBehaviour
             //print(transform.position.y);
             //print("P: " + previousY);
             if((previousY - transform.position.y) >= levitateTolerance) {
-                print("Hi");
                 body.AddForce(new Vector3(0.0f, 1.0f, 0.0f) * body.mass * 9.8f * (previousY - transform.position.y));
             }
 
@@ -57,7 +56,8 @@ public class XWing : NetworkBehaviour
                 foreach (var o in shootingPoints)
                 {
                     GameObject b = Instantiate(bullet, o.transform.position, o.transform.rotation);
-                    NetworkServer.Spawn(b);
+                    //Destroy(b);
+                    Shoot(b);
                 }
             }
 
@@ -78,5 +78,10 @@ public class XWing : NetworkBehaviour
                 listener.enabled = false;
             }
         }
+    }
+
+    [Command] 
+    public void Shoot(GameObject o) {
+        if(this.isServer) NetworkServer.Spawn(o);
     }
 }
